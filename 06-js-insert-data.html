@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>05-JavaScript-Basic-Form By Techit</title>
+    <title>06-JavaScript-Insert-Data By Techit</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 
@@ -13,18 +13,34 @@
         crossorigin="anonymous"></script>
 
     <script>
+        let array_fname = []
+        let array_phone = []
+        let array_email = []
+
+        if (localStorage.getItem('fname') != null &&
+            localStorage.getItem('phone') != null &&
+            localStorage.getItem('email') != null) {
+            array_fname = JSON.parse(localStorage.getItem('fname'))
+            array_phone = JSON.parse(localStorage.getItem('phone'))
+            array_email = JSON.parse(localStorage.getItem('email'))
+        }
+
         function click_submit() {
             if (document.getElementById('fname').value != '' &&
                 document.getElementById('phone').value != '' &&
                 document.getElementById('email').value != '') {
 
-                document.getElementById('output_fname').innerHTML = document.getElementById('fname').value
-                document.getElementById('output_phone').innerHTML = document.getElementById('phone').value
-                document.getElementById('output_email').innerHTML = document.getElementById('email').value
+                array_fname.push(document.getElementById('fname').value)
+                array_phone.push(document.getElementById('phone').value)
+                array_email.push(document.getElementById('email').value)
 
-                document.getElementById('fname').value = ''
-                document.getElementById('phone').value = ''
-                document.getElementById('email').value = ''
+                localStorage.setItem('fname', JSON.stringify(array_fname))
+                localStorage.setItem('phone', JSON.stringify(array_phone))
+                localStorage.setItem('email', JSON.stringify(array_email))
+
+                document.getElementById("fname").value = ''
+                document.getElementById("phone").value = ''
+                document.getElementById("email").value = ''
             } else {
                 window.alert('กรุณาป้อนข้อมูลให้ครบถ้วน')
             }
@@ -35,16 +51,15 @@
             document.getElementById('phone').value = ''
             document.getElementById('email').value = ''
 
-            document.getElementById('output_fname').innerHTML = ''
-            document.getElementById('output_phone').innerHTML = ''
-            document.getElementById('output_email').innerHTML = ''
+            document.getElementById('noti_fname').innerHTML = ''
+            document.getElementById('noti_phone').innerHTML = ''
+            document.getElementById('noti_email').innerHTML = ''
         }
 
         function focusout_fname() {
             if (document.getElementById('fname').value != '') {
                 document.getElementById('noti_fname').innerHTML = ''
             } else {
-
                 document.getElementById('noti_fname').innerHTML = 'This Full Name is invalid'
             }
         }
@@ -53,7 +68,6 @@
             if (document.getElementById('phone').value != '') {
                 document.getElementById('noti_phone').innerHTML = ''
             } else {
-
                 document.getElementById('noti_phone').innerHTML = 'This Phone Number is invalid'
             }
         }
@@ -62,21 +76,8 @@
             if (document.getElementById('email').value != '') {
                 document.getElementById('noti_email').innerHTML = ''
             } else {
-
                 document.getElementById('noti_email').innerHTML = 'This Email is invalid'
             }
-        }
-
-        function focus_fname() {
-            document.getElementById('noti_fname').innerHTML = ''
-        }
-
-        function focus_phone() {
-            document.getElementById('noti_phone').innerHTML = ''
-        }
-
-        function focus_email() {
-            document.getElementById('noti_email').innerHTML = ''
         }
     </script>
 </head>
@@ -120,6 +121,10 @@
                         </a>
                         <a class="navbar-item" href="07-js-show-data.html">
                             Page07
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item">
+                            Report an issue
                         </a>
                     </div>
                 </div>
@@ -198,17 +203,6 @@
                                 <button class="button is-link is-light" onclick="click_cancel()">Cancel</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="column is-one-third is-half">
-            <div class="card">
-                <div class="card-content has-background-light">
-                    <div class="content">
-                        <p id="output_fname"></p>
-                        <p id="output_phone"></p>
-                        <p id="output_email"></p>
                     </div>
                 </div>
             </div>
