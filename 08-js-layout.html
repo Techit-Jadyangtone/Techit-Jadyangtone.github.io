@@ -17,14 +17,14 @@
     </script>
 </head>
 
-<body onload="load_data()">
+<body onload="refresh()">
     <section class="hero is-light is-fullheight">
         <header></header>
         <div class="hero-body is-align-items-start">
             <div class="columns mx-auto">
                 <div class="column">
-                    <div class="card" style="border: 4px solid rgba(0, 128, 255, 0.391);">
-                        <div class="card-content ">
+                    <div class="card" style="border: 4px solid rgba(183, 0, 255, 0.391);">
+                        <div class="card-content">
                             <div class="content">
                                 <table id="table1">
                                     <caption>
@@ -59,9 +59,10 @@
         let array_email = []
 
         function load_data() {
-            if (localStorage.getItem('fname') != null
-                && localStorage.getItem('phone') != null
-                && localStorage.getItem('email') != null) {
+            if (localStorage.getItem('fname') != null &&
+                localStorage.getItem('phone') != null &&
+                localStorage.getItem('email') != null) {
+
                 array_fname = JSON.parse(localStorage.getItem('fname'))
                 array_phone = JSON.parse(localStorage.getItem('phone'))
                 array_email = JSON.parse(localStorage.getItem('email'))
@@ -77,16 +78,18 @@
             tb1.innerHTML = '';
             for (i = 0; i < array_fname.length; i++) {
                 const row = tb1.insertRow(i)
+                
                 row.insertCell().innerHTML = array_fname[i]
                 row.insertCell().innerHTML = array_phone[i]
                 row.insertCell().innerHTML = array_email[i]
-                row.insertCell().innerHTML = '<a><i class="fa-solid fa-pen "></i></a>'
+                row.insertCell().innerHTML = `<a onclick="edit_dta(${i})"><i class="fa-solid fa-pen"></i></a>`
                 row.insertCell().innerHTML = `<a onclick="delete_data(${i})"><i class="fa-solid fa-circle-minus fa-shake has-text-danger"></i></a>`
             }
         }
 
         function insert_data() {
             const row = tb1.insertRow()
+
             row.insertCell().innerHTML = '<input id="fname" class="input" type="text" placeholder="Full name">'
             row.insertCell().innerHTML = '<input id="phone" class="input" type="text" placeholder="Phone">'
             row.insertCell().innerHTML = '<input id="email" class="input" type="text" placeholder="Mail">'
@@ -95,13 +98,13 @@
         }
 
         function cancel() {
-            tb1.deleteRow(tb1.rows.length - 1)
+            refresh();
         }
 
         function save() {
-            if (document.getElementById('fname').value != ''
-                && document.getElementById('phone').value != ''
-                && document.getElementById('email').value != '') {
+            if (document.getElementById('fname').value != '' &&
+                document.getElementById('phone').value != '' &&
+                document.getElementById('email').value != '') {
 
                 array_fname.push(document.getElementById('fname').value)
                 array_phone.push(document.getElementById('phone').value)
@@ -111,22 +114,59 @@
                 localStorage.setItem('phone', JSON.stringify(array_phone))
                 localStorage.setItem('email', JSON.stringify(array_email))
 
-                document.getElementById('fname').value = ''
-                document.getElementById('phone').value = ''
-                document.getElementById('email').value = ''
-
                 refresh();
             } else {
-                window.alert('Please Input Form valid')
+                window.alert('โปรดกรอกข้อมูลให้ครบถ้วน')
             }
         }
 
         function delete_data(index) {
-            const i = index
-            console.log(array_fname)
-            console.log(i)
+            if (window.confirm('คุณแน่ใจว่าต้องการที่จะลบ?')) {
 
+                array_fname.splice(index, 1);
+                array_phone.splice(index, 1);
+                array_email.splice(index, 1);
+
+                localStorage.setItem('fname', JSON.stringify(array_fname))
+                localStorage.setItem('phone', JSON.stringify(array_phone))
+                localStorage.setItem('email', JSON.stringify(array_email))
+
+                refresh();
+            }
+        }
+
+        function edit_dta(index) {
             refresh();
+            const rows = tb1.rows[index]
+
+            rows.cells[0].innerHTML = `<input value ="${array_fname[index]}" id="fname" class="input" type="text" placeholder="Full name">`
+            rows.cells[1].innerHTML = `<input value ="${array_phone[index]}" id="phone" class="input" type="text" placeholder="Phone">`
+            rows.cells[2].innerHTML = `<input value ="${array_email[index]}" id="email" class="input" type="text" placeholder="Mail">`
+            rows.cells[3].innerHTML = `<a onclick="edit_save(${index})"><i class="fa-solid fa-check fa-beat has-text-success"></i></a>`
+            rows.cells[4].innerHTML = `<a onclick="edit_cancel()"><i class="fa-solid fa-xmark fa-shake has-text-danger"></i></a>`
+        }
+
+        function edit_cancel() {
+            refresh();
+        }
+
+        function edit_save(index) {
+            if (document.getElementById('fname').value != '' &&
+                document.getElementById('phone').value != '' &&
+                document.getElementById('email').value != '') {
+
+                array_fname[index] = document.getElementById('fname').value;
+                array_phone[index] = document.getElementById('phone').value;
+                array_email[index] = document.getElementById('email').value;
+
+                localStorage.setItem('fname', JSON.stringify(array_fname))
+                localStorage.setItem('phone', JSON.stringify(array_phone))
+                localStorage.setItem('email', JSON.stringify(array_email))
+
+                refresh();
+            } else {
+                window.alert('โปรดกรอกข้อมูลให้ครบถ้วน')
+            }
         }
     </script>
 </body>
